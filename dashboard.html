@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnHub - Student Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --danger-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #2ecc71;
+            --student-color: #9b59b6;
+            --sidebar-width: 250px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--secondary-color);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            padding: 1.5rem 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .sidebar-header h2 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.3rem;
+        }
+        
+        .sidebar-header i {
+            color: var(--student-color);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1.5rem;
+            color: var(--light-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            gap: 0.8rem;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left: 4px solid var(--student-color);
+        }
+        
+        .sidebar-menu a i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            padding: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--student-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .user-info h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+        }
+        
+        .user-info p {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        .logout-btn {
+            display: block;
+            width: 100%;
+            padding: 0.6rem;
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .logout-btn i {
+            margin-right: 0.5rem;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .page-title h1 {
+            color: var(--secondary-color);
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .search-bar {
+            position: relative;
+        }
+        
+        .search-bar input {
+            padding: 0.6rem 1rem 0.6rem 2.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 250px;
+            transition: all 0.3s ease;
+        }
+        
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--student-color);
+            box-shadow: 0 0 0 3px rgba(155, 89, 182, 0.2);
+        }
+        
+        .search-bar i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--dark-color);
+            opacity: 0.6;
+        }
+        
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            color: var(--dark-color);
+            font-size: 1.2rem;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger-color);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        
+        /* Dashboard Content Styles */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: white;
+        }
+        
+        .card-icon.courses {
+            background-color: var(--student-color);
+        }
+        
+        .card-icon.progress {
+            background-color: var(--success-color);
+        }
+        
+        .card-icon.mentors {
+            background-color: var(--primary-color);
+        }
+        
+        .card-icon.profile {
+            background-color: #f39c12;
+        }
+        
+        .card-title h3 {
+            font-size: 1rem;
+            color: var(--dark-color);
+            margin-bottom: 0.2rem;
+        }
+        
+        .card-title p {
+            font-size: 0.8rem;
+            color: #777;
+        }
+        
+        .card-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-description {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        /* Courses Section */
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-title h2 {
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+        }
+        
+        .section-title a {
+            color: var(--student-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .course-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .course-thumbnail {
+            height: 150px;
+            background-color: #ddd;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .course-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .course-category {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--student-color);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        
+        .course-info {
+            padding: 1.2rem;
+        }
+        
+        .course-title {
+            font-size: 1.1rem;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .course-instructor {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .course-instructor img {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .course-progress {
+            margin-bottom: 1rem;
+        }
+        
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.3rem;
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background-color: #eee;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--student-color);
+            width: 65%;
+        }
+        
+        .course-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+        
+        .btn {
+            padding: 0.6rem 1rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background-color: var(--student-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #8e44ad;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--student-color);
+            color: var(--student-color);
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(155, 89, 182, 0.1);
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+            
+            .sidebar-header h2 span, 
+            .sidebar-menu a span {
+                display: none;
+            }
+            
+            .sidebar-menu a {
+                justify-content: center;
+                padding: 0.8rem 0;
+            }
+            
+            .sidebar-menu a i {
+                font-size: 1.2rem;
+            }
+            
+            .sidebar-footer {
+                display: none;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-cards {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .search-bar input {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2><i class="fas fa-graduation-cap"></i> <span>LearnHub</span></h2>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li><a href="dashboard.html" class="active"><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
+            <li><a href="my-courses.html"><i class="fas fa-book"></i> <span>My Courses</span></a></li>
+            <li><a href="progress.html"><i class="fas fa-chart-line"></i> <span>Progress</span></a></li>
+            <li><a href="schedule.html"><i class="fas fa-calendar-alt"></i> <span>Schedule</span></a></li>
+            <li><a href="assignments.html"><i class="fas fa-tasks"></i> <span>Assignments</span></a></li>
+            <li><a href="discussions.html"><i class="fas fa-comments"></i> <span>Discussions</span></a></li>
+        </ul>
+        
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="user-avatar">JS</div>
+                <div class="user-info">
+                    <h4>John Smith</h4>
+                    <p>Computer Science</p>
+                </div>
+            </div>
+            <a href="index.html" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Log Out
+            </a>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="header">
+            <div class="page-title">
+                <h1><i class="fas fa-home"></i> Student Dashboard</h1>
+            </div>
+            
+            <div class="header-actions">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search courses, mentors...">
+                </div>
+                
+                <div class="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dashboard Cards -->
+        <div class="dashboard-cards">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon courses">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="card-title">
+                        <h3>My Courses</h3>
+                        <p>Currently enrolled</p>
+                    </div>
+                </div>
+                <div class="card-value">5</div>
+                <p class="card-description">You're enrolled in 5 courses this semester</p>
+                <a href="my-courses.html" class="btn btn-primary" style="display: inline-block; margin-top: 10px;">View Courses</a>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon progress">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="card-title">
+                        <h3>Overall Progress</h3>
+                        <p>Completion rate</p>
+                    </div>
+                </div>
+                <div class="card-value">78%</div>
+                <p class="card-description">Keep going! You're making great progress</p>
+                <a href="progress.html" class="btn btn-primary" style="display: inline-block; margin-top: 10px;">View Progress</a>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon mentors">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="card-title">
+                        <h3>Mentors</h3>
+                        <p>Available support</p>
+                    </div>
+                </div>
+                <div class="card-value">3</div>
+                <p class="card-description">You have 3 mentors assigned to help you</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon profile">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="card-title">
+                        <h3>Profile</h3>
+                        <p>Completion status</p>
+                    </div>
+                </div>
+                <div class="card-value">90%</div>
+                <p class="card-description">Your profile is almost complete</p>
+            </div>
+        </div>
+        
+        <!-- Current Courses Section -->
+        <div class="section-title">
+            <h2>Current Courses</h2>
+            <a href="my-courses.html">View All <i class="fas fa-arrow-right"></i></a>
+        </div> 
+                <div class="courses-grid">
+            <!-- Course Card 1 -->
+            <div class="course-card">
+                <div class="course-thumbnail">
+                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Programming Course">
+                    <span class="course-category">Programming</span>
+                </div>
+                <div class="course-info">
+                    <h3 class="course-title">Advanced Web Development</h3>
+                    <div class="course-instructor">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Instructor">
+                        <span>Prof. David Wilson</span>
+                    </div>
+                    <div class="course-progress">
+                        <div class="progress-info">
+                            <span>Progress</span>
+                            <span>65%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 65%;"></div>
+                        </div>
+                    </div>
+                    <div class="course-actions">
+                        <button class="btn btn-primary">Continue</button>
+                        <button class="btn btn-outline">Details</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Course Card 2 -->
+            <div class="course-card">
+                <div class="course-thumbnail">
+                    <img src="https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Data Science Course">
+                    <span class="course-category">Data Science</span>
+                </div>
+                <div class="course-info">
+                    <h3 class="course-title">Machine Learning Fundamentals</h3>
+                    <div class="course-instructor">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Instructor">
+                        <span>Dr. Sarah Johnson</span>
+                    </div>
+                    <div class="course-progress">
+                        <div class="progress-info">
+                            <span>Progress</span>
+                            <span>82%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 82%;"></div>
+                        </div>
+                    </div>
+                    <div class="course-actions">
+                        <button class="btn btn-primary">Continue</button>
+                        <button class="btn btn-outline">Details</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Course Card 3 -->
+            <div class="course-card">
+                <div class="course-thumbnail">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Database Course">
+                    <span class="course-category">Database</span>
+                </div>
+                <div class="course-info">
+                    <h3 class="course-title">Modern Database Systems</h3>
+                    <div class="course-instructor">
+                        <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Instructor">
+                        <span>Prof. Michael Chen</span>
+                    </div>
+                    <div class="course-progress">
+                        <div class="progress-info">
+                            <span>Progress</span>
+                            <span>45%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 45%;"></div>
+                        </div>
+                    </div>
+                    <div class="course-actions">
+                        <button class="btn btn-primary">Continue</button>
+                        <button class="btn btn-outline">Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Upcoming Assignments Section -->
+        <div class="section-title">
+            <h2>Upcoming Assignments</h2>
+            <a href="assignments.html">View All <i class="fas fa-arrow-right"></i></a>
+        </div>
+        
+        <div class="courses-grid">
+            <!-- Assignment Card 1 -->
+            <div class="course-card">
+                <div class="course-info">
+                    <h3 class="course-title">Web Development Project</h3>
+                    <div class="course-instructor">
+                        <i class="fas fa-book"></i>
+                        <span>Advanced Web Development</span>
+                    </div>
+                    <div class="progress-info" style="margin-top: 10px;">
+                        <span><i class="far fa-calendar-alt"></i> Due: May 15, 2023</span>
+                    </div>
+                    <div class="progress-info">
+                        <span><i class="far fa-clock"></i> 3 days left</span>
+                    </div>
+                    <div class="course-actions">
+                        <button class="btn btn-primary">Submit Work</button>
+                        <button class="btn btn-outline">View Details</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Assignment Card 2 -->
+            <div class="course-card">
+                <div class="course-info">
+                    <h3 class="course-title">ML Model Implementation</h3>
+                    <div class="course-instructor">
+                        <i class="fas fa-book"></i>
+                        <span>Machine Learning Fundamentals</span>
+                    </div>
+                    <div class="progress-info" style="margin-top: 10px;">
+                        <span><i class="far fa-calendar-alt"></i> Due: May 18, 2023</span>
+                    </div>
+                    <div class="progress-info">
+                        <span><i class="far fa-clock"></i> 6 days left</span>
+                    </div>
+                    <div class="course-actions">
+                        <button class="btn btn-primary">Submit Work</button>
+                        <button class="btn btn-outline">View Details</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Assignment Card 3 -->
+            <div class="course-card">
+                <div class="course-info">
+                    <h3 class="course-title">Database Design Task</h3>
+                    <div class="course-instructor">
+                        <i class="fas fa-book"></i>
+                        <span>Modern Database Systems</span>
+                    </div>
+                    <div class="progress-info" style="margin-top: 10px;">
+                        <span><i class="far fa-calendar-alt"></i> Due: May 20, 2023</span>
+                    </div>
+                    <div class="progress-info">
+                        <span><i class="far fa-clock"></i> 8 days left</span>
+                    </div>
+                    <div class="course-actions">
+                        <button class="btn btn-primary">Submit Work</button>
+                        <button class="btn btn-outline">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

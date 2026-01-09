@@ -1,0 +1,232 @@
+/* style.css */
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+    color: #333;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Login Container */
+.login-container {
+    width: 100%;
+    max-width: 900px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Logo Section */
+.logo {
+    background: linear-gradient(135deg, #4a6bff 0%, #3a5bef 100%);
+    color: white;
+    padding: 2.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo i {
+    font-size: 3.5rem;
+    color: white;
+    background: rgba(255, 255, 255, 0.2);
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.logo h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Login Options */
+.login-options {
+    padding: 3rem 2rem;
+    text-align: center;
+}
+
+.login-options h2 {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-bottom: 2.5rem;
+    font-weight: 600;
+    position: relative;
+    display: inline-block;
+}
+
+.login-options h2::after {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 4px;
+    background: #4a6bff;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 2px;
+}
+
+/* Option Cards */
+.option-cards {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+}
+
+.option-card {
+    flex: 1;
+    min-width: 280px;
+    max-width: 350px;
+    padding: 2.5rem 2rem;
+    border-radius: 15px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    background: white;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.option-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+}
+
+.option-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.option-card i {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+.option-card:hover i {
+    transform: scale(1.1);
+}
+
+.option-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.option-card p {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Student Card */
+.student {
+    border-top: 5px solid #4a6bff;
+}
+
+.student i {
+    color: #4a6bff;
+    background: rgba(74, 107, 255, 0.1);
+    padding: 15px;
+    border-radius: 50%;
+}
+
+.student:hover {
+    border-color: #3a5bef;
+}
+
+/* Admin Card */
+.admin {
+    border-top: 5px solid #ff6b6b;
+}
+
+.admin i {
+    color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.1);
+    padding: 15px;
+    border-radius: 50%;
+}
+
+.admin:hover {
+    border-color: #ef5b5b;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .login-container {
+        border-radius: 15px;
+    }
+    
+    .logo {
+        padding: 2rem;
+    }
+    
+    .login-options {
+        padding: 2rem 1.5rem;
+    }
+    
+    .option-card {
+        min-width: 100%;
+        padding: 2rem 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 15px;
+    }
+    
+    .logo h1 {
+        font-size: 1.8rem;
+    }
+    
+    .login-options h2 {
+        font-size: 1.5rem;
+    }
+    
+    .option-card h3 {
+        font-size: 1.3rem;
+    }
+    
+    .option-card p {
+        font-size: 0.9rem;
+    }
+}

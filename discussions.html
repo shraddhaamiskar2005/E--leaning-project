@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnHub - Discussions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Global Styles */
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #f8f9fc;
+            --accent-color: #2e59d9;
+            --text-color: #5a5c69;
+            --light-gray: #dddfeb;
+            --white: #ffffff;
+            --shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            --success-color: #1cc88a;
+            --warning-color: #f6c23e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem 1.5rem 0.5rem;
+            height: 70px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar-header h2 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin: 0;
+        }
+        
+        .sidebar-header h2 i {
+            margin-right: 10px;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0 1rem;
+            margin-top: 1rem;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 0.35rem;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: var(--light-gray);
+            color: var(--primary-color);
+        }
+        
+        .sidebar-menu a.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .sidebar-menu a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 1.5rem;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .page-title h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .page-title h1 i {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+        
+        /* Discussions Styles */
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-title h2 {
+            font-size: 1.4rem;
+            color: var(--text-color);
+        }
+        
+        .section-title a {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.35rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .section-title a:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .section-title a i {
+            margin-left: 5px;
+        }
+        
+        .discussion-card {
+            background-color: var(--white);
+            border-radius: 0.35rem;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: transform 0.3s;
+        }
+        
+        .discussion-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .discussion-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .discussion-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .discussion-title:hover {
+            text-decoration: underline;
+        }
+        
+        .discussion-meta {
+            display: flex;
+            align-items: center;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .discussion-meta span {
+            margin-right: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .discussion-meta i {
+            margin-right: 5px;
+        }
+        
+        .discussion-content {
+            margin: 1rem 0;
+            line-height: 1.6;
+        }
+        
+        .discussion-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--light-gray);
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .discussion-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .tag {
+            background-color: var(--light-gray);
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            color: var(--text-color);
+        }
+        
+        .discussion-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .discussion-actions button {
+            background: none;
+            border: none;
+            color: #6c757d;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        
+        .discussion-actions button:hover {
+            color: var(--primary-color);
+        }
+        
+        .discussion-actions button i {
+            margin-right: 5px;
+        }
+        
+        .pinned-discussion {
+            border-left: 4px solid var(--warning-color);
+        }
+        
+        .resolved-discussion {
+            border-left: 4px solid var(--success-color);
+        }
+        
+        /* Search and Filter */
+        .discussion-tools {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+        
+        .search-box {
+            position: relative;
+            width: 300px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 0.35rem;
+            font-size: 0.9rem;
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        
+        .filter-dropdown {
+            position: relative;
+        }
+        
+        .filter-dropdown select {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 0.35rem;
+            background-color: var(--white);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 80px;
+                overflow: hidden;
+            }
+            
+            .sidebar-header h2 span,
+            .sidebar-menu a span {
+                display: none;
+            }
+            
+            .sidebar-menu a {
+                justify-content: center;
+                padding: 0.75rem 0;
+            }
+            
+            .sidebar-menu a i {
+                margin-right: 0;
+                font-size: 1.2rem;
+            }
+            
+            .main-content {
+                margin-left: 80px;
+                padding: 1rem;
+            }
+            
+            .discussion-tools {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2><i class="fas fa-graduation-cap"></i> <span>LearnHub</span></h2>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li><a href="dashboard.html"><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
+            <li><a href="courses.html"><i class="fas fa-book"></i> <span>Courses</span></a></li>
+            <li><a href="assignments.html"><i class="fas fa-tasks"></i> <span>Assignments</span></a></li>
+     
+            <li><a href="discussions.html" class="active"><i class="fas fa-comments"></i> <span>Discussions</span></a></li>
+           
+        </ul>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="header">
+            <div class="page-title">
+                <h1><i class="fas fa-comments"></i> Discussions</h1>
+            </div>
+        </div>
+        
+        <div class="discussion-tools">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search discussions...">
+            </div>
+            <div class="filter-dropdown">
+                <select>
+                    <option>All Courses</option>
+                    <option>Mathematics</option>
+                    <option>Science</option>
+                    <option>History</option>
+                    <option>Literature</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="section-title">
+            <h2>Recent Discussions</h2>
+            <a href="new-discussion.html">Start New <i class="fas fa-plus"></i></a>
+        </div>
+        
+        <!-- Discussions List -->
+        <div class="discussion-card pinned-discussion">
+            <div class="discussion-header">
+                <a href="#" class="discussion-title">How to solve quadratic equations?</a>
+                <div class="discussion-meta">
+                    <span><i class="fas fa-thumbtack"></i> Pinned</span>
+                    <span><i class="fas fa-book"></i> Mathematics</span>
+                </div>
+            </div>
+            <div class="discussion-content">
+                <p>I'm having trouble understanding how to apply the quadratic formula to solve equations like x² - 5x + 6 = 0. Can someone explain the step-by-step process with this example?</p>
+            </div>
+            <div class="discussion-footer">
+                <div class="discussion-tags">
+                    <span class="tag">Algebra</span>
+                    <span class="tag">Quadratic Equations</span>
+                </div>
+                <div class="discussion-actions">
+                    <button><i class="fas fa-reply"></i> 12 Replies</button>
+                    <button><i class="fas fa-eye"></i> 45 Views</button>
+                    <button><i class="fas fa-clock"></i> 2 days ago</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="discussion-card resolved-discussion">
+            <div class="discussion-header">
+                <a href="#" class="discussion-title">Best resources for learning Python</a>
+                <div class="discussion-meta">
+                    <span><i class="fas fa-check-circle"></i> Resolved</span>
+                    <span><i class="fas fa-book"></i> Computer Science</span>
+                </div>
+            </div>
+            <div class="discussion-content">
+                <p>I'm just starting with Python programming and would like recommendations for beginner-friendly resources. What books, websites, or tutorials helped you when you were learning?</p>
+            </div>
+            <div class="discussion-footer">
+                <div class="discussion-tags">
+                    <span class="tag">Programming</span>
+                    <span class="tag">Python</span>
+                    <span class="tag">Beginner</span>
+                </div>
+                <div class="discussion-actions">
+                    <button><i class="fas fa-reply"></i> 8 Replies</button>
+                    <button><i class="fas fa-eye"></i> 32 Views</button>
+                    <button><i class="fas fa-clock"></i> 1 week ago</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="discussion-card">
+            <div class="discussion-header">
+                <a href="#" class="discussion-title">Group project ideas for History class</a>
+                <div class="discussion-meta">
+                    <span><i class="fas fa-book"></i> History</span>
+                </div>
+            </div>
+            <div class="discussion-content">
+                <p>Our team needs to come up with a creative project idea for our 20th century history course. Any suggestions for engaging topics or presentation formats that have worked well in the past?</p>
+            </div>
+            <div class="discussion-footer">
+                <div class="discussion-tags">
+                    <span class="tag">Group Project</span>
+                    <span class="tag">20th Century</span>
+                </div>
+                <div class="discussion-actions">
+                    <button><i class="fas fa-reply"></i> 5 Replies</button>
+                    <button><i class="fas fa-eye"></i> 28 Views</button>
+                    <button><i class="fas fa-clock"></i> 3 days ago</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="discussion-card">
+            <div class="discussion-header">
+                <a href="#" class="discussion-title">Lab report formatting guidelines</a>
+                <div class="discussion-meta">
+                    <span><i class="fas fa-book"></i> Science</span>
+                </div>
+            </div>
+            <div class="discussion-content">
+                <p>Does anyone have a template or checklist for formatting lab reports according to Professor Smith's requirements? I want to make sure I'm including all the necessary sections.</p>
+            </div>
+            <div class="discussion-footer">
+                <div class="discussion-tags">
+                    <span class="tag">Lab Report</span>
+                    <span class="tag">Formatting</span>
+                </div>
+                <div class="discussion-actions">
+                    <button><i class="fas fa-reply"></i> 3 Replies</button>
+                    <button><i class="fas fa-eye"></i> 18 Views</button>
+                    <button><i class="fas fa-clock"></i> 1 day ago</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="pagination" style="margin-top: 2rem; display: flex; justify-content: center; gap: 0.5rem;">
+            <button style="padding: 0.5rem 1rem; background-color: var(--primary-color); color: white; border: none; border-radius: 0.35rem;">Previous</button>
+            <button style="padding: 0.5rem 1rem; background-color: var(--primary-color); color: white; border: none; border-radius: 0.35rem;">1</button>
+            <button style="padding: 0.5rem 1rem; background-color: var(--light-gray); color: var(--text-color); border: none; border-radius: 0.35rem;">2</button>
+            <button style="padding: 0.5rem 1rem; background-color: var(--light-gray); color: var(--text-color); border: none; border-radius: 0.35rem;">3</button>
+            <button style="padding: 0.5rem 1rem; background-color: var(--primary-color); color: white; border: none; border-radius: 0.35rem;">Next</button>
+        </div>
+    </main>
+</body>
+</html>
